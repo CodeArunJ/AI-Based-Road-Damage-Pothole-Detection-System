@@ -96,6 +96,7 @@ const CitizenSignupPage = () => {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      data-testid="signup-name"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="John Doe"
                     />
@@ -111,6 +112,7 @@ const CitizenSignupPage = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      data-testid="signup-email"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="your.email@example.com"
                     />
@@ -125,6 +127,7 @@ const CitizenSignupPage = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      data-testid="signup-phone"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="+1 (555) 000-0000"
                     />
@@ -140,6 +143,7 @@ const CitizenSignupPage = () => {
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      data-testid="signup-password"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="••••••••"
                     />
@@ -155,6 +159,7 @@ const CitizenSignupPage = () => {
                       required
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                      data-testid="signup-confirm-password"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="••••••••"
                     />
@@ -164,6 +169,7 @@ const CitizenSignupPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
+                    data-testid="signup-submit"
                     className="w-full flex items-center justify-center rounded-xl h-12 bg-primary text-white font-bold shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                   >
                     {loading ? <LoadingSpinner size="small" /> : 'Create Account'}

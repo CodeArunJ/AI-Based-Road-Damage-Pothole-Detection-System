@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { apiService } from '../services/apiService'
+import ApiService from '../services/apiService'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import LoadingSpinner from '../components/LoadingSpinner'
@@ -18,7 +18,7 @@ const RecentReportsPage = () => {
         if (isAuthenticated) {
           url += '?status_filter=verified&limit=20'
         }
-        const response = await apiService.get(url)
+        const response = await ApiService.reports.getAll(isAuthenticated ? { status_filter: 'verified', limit: 20 } : {})
         setReports(response.data || [])
       } catch (error) {
         console.error('Error fetching reports:', error)
@@ -60,17 +60,17 @@ const RecentReportsPage = () => {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {reports.map((report) => (
-                <div key={report.id} className="bg-white dark:bg-gray-900 rounded-xl border border-[#dbe0e6] dark:border-gray-800 p-6 hover:shadow-md transition-shadow">
+                <div key={report._id || report.id} className="bg-white dark:bg-gray-900 rounded-xl border border-[#dbe0e6] dark:border-gray-800 p-6 hover:shadow-md transition-shadow">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex-1">
                       <h3 className="font-bold text-lg mb-2">
-                        Pothole Report #{report.id?.substring(0, 8)}
+                        Pothole Report #{(report._id || report.id)?.substring(0, 8)}
                       </h3>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <span className="text-gray-500 dark:text-gray-400">Location</span>
                           <p className="font-semibold">
-                            {report.latitude?.toFixed(4)}, {report.longitude?.toFixed(4)}
+                            {report.location?.latitude?.toFixed(4)}, {report.location?.longitude?.toFixed(4)}
                           </p>
                         </div>
                         <div>
@@ -88,7 +88,7 @@ const RecentReportsPage = () => {
                         <div>
                           <span className="text-gray-500 dark:text-gray-400">AI Confidence</span>
                           <p className="font-semibold">
-                            {report.ai_confidence ? `${report.ai_confidence.toFixed(1)}%` : 'N/A'}
+                            {report.ai_confidence != null ? `${report.ai_confidence.toFixed(1)}%` : 'N/A'}
                           </p>
                         </div>
                         <div>

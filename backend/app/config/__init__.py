@@ -29,6 +29,10 @@ class Settings(BaseSettings):
     # Environment
     ENVIRONMENT: str = "development"
     
+    # Testing Credentials
+    TEST_AUTHORITY_EMAIL: str = "admin@roadcare.gov"
+    TEST_AUTHORITY_PASSWORD: str = "admin123"
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

@@ -75,6 +75,7 @@ const CitizenLoginPage = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      data-testid="citizen-email"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="your.email@example.com"
                     />
@@ -90,6 +91,7 @@ const CitizenLoginPage = () => {
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      data-testid="citizen-password"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="••••••••"
                     />
@@ -113,6 +115,7 @@ const CitizenLoginPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
+                    data-testid="citizen-login-submit"
                     className="w-full flex items-center justify-center rounded-xl h-12 bg-primary text-white font-bold shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? <LoadingSpinner size="small" /> : 'Sign In'}
@@ -134,6 +137,7 @@ const CitizenLoginPage = () => {
                 {/* Sign Up Link */}
                 <Link
                   to="/citizen-signup"
+                  data-testid="citizen-signup-link"
                   className="w-full flex items-center justify-center rounded-xl h-12 border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-all"
                 >
                   Create Account
@@ -145,7 +149,7 @@ const CitizenLoginPage = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-[#617589] dark:text-gray-400">
                 Are you a city authority?{' '}
-                <Link to="/authority-login" className="text-primary hover:underline font-medium">
+                <Link to="/authority-login" className="text-primary hover:underline font-medium" data-testid="authority-login-link">
                   Login here
                 </Link>
               </p>

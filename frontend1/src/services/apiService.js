@@ -65,7 +65,7 @@ const ApiService = {
     create: (data) => apiClient.post('/reports', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }),
-    update: (id, data) => apiClient.put(`/reports/${id}`, data),
+    update: (id, data) => apiClient.put(`/reports/${id}/status`, data),
     delete: (id) => apiClient.delete(`/reports/${id}`),
     verify: (id, data) => apiClient.post(`/reports/${id}/verify`, data),
   },

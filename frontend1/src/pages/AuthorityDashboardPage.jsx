@@ -23,14 +23,18 @@ const AuthorityDashboardPage = () => {
   const fetchReports = async () => {
     try {
       const response = await ApiService.reports.getAll()
-      setReports(response.data)
-      
-      // Calculate stats
-      const pending = response.data.filter(r => r.status === 'pending').length
-      const verified = response.data.filter(r => r.status === 'verified').length
-      const repaired = response.data.filter(r => r.status === 'repaired').length
-      
-      setStats({ pending, verified, repaired })
+      if (Array.isArray(response.data)) {
+        setReports(response.data)
+        
+        // Calculate stats
+        const pending = response.data.filter(r => r.status === 'pending').length
+        const verified = response.data.filter(r => r.status === 'verified').length
+        const repaired = response.data.filter(r => r.status === 'repaired').length
+        
+        setStats({ pending, verified, repaired })
+      } else {
+        setReports([])
+      }
     } catch (error) {
       console.error('Error fetching reports:', error)
     } finally {
@@ -73,9 +77,9 @@ const AuthorityDashboardPage = () => {
             </h2>
           </div>
           <nav className="flex items-center gap-9">
-            <Link to="/authority-dashboard" className="text-primary text-sm font-bold leading-normal">
+            <a href="#dashboard" className="text-primary text-sm font-bold leading-normal hover:text-primary transition-colors">
               Dashboard
-            </Link>
+            </a>
             <a href="#reports" className="text-sm font-medium leading-normal hover:text-primary transition-colors">
               Reports
             </a>
@@ -87,12 +91,14 @@ const AuthorityDashboardPage = () => {
         <div className="flex gap-2 items-center">
           <button
             onClick={toggleTheme}
+            data-testid="authority-theme-toggle"
             className="flex items-center justify-center rounded-lg h-10 w-10 bg-[#f0f2f4] dark:bg-gray-800 text-[#111418] dark:text-white hover:bg-gray-200 transition-colors"
           >
             <span className="material-symbols-outlined">{isDark ? 'light_mode' : 'dark_mode'}</span>
           </button>
           <button
             onClick={logout}
+            data-testid="authority-logout"
             className="flex items-center justify-center rounded-lg h-10 px-4 bg-red-500 text-white hover:bg-red-600 transition-colors"
           >
             <span className="material-symbols-outlined mr-2">logout</span>
@@ -104,15 +110,15 @@ const AuthorityDashboardPage = () => {
       {/* Main Content */}
       <main className="flex-1 px-10 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.email}</h1>
+        <div className="mb-8" id="dashboard">
+          <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
           <p className="text-gray-600 dark:text-gray-400">
             Here's an overview of road damage reports
           </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="analytics">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
             <div className="flex items-center justify-between mb-4">
               <span className="material-symbols-outlined text-yellow-500 text-4xl">pending</span>
@@ -137,7 +143,7 @@ const AuthorityDashboardPage = () => {
         </div>
 
         {/* Reports Table */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div id="reports" data-testid="authority-reports-table" className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
             <h2 className="text-xl font-bold">Recent Reports</h2>
           </div>
@@ -174,15 +180,15 @@ const AuthorityDashboardPage = () => {
                   </tr>
                 ) : (
                   reports.map((report) => (
-                    <tr key={report.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                    <tr key={report._id || report.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        #{report.id}
+                        #{(report._id || report.id)?.substring(0, 8)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {report.latitude?.toFixed(4)}, {report.longitude?.toFixed(4)}
+                        {report.location?.latitude?.toFixed(4)}, {report.location?.longitude?.toFixed(4)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        {report.ai_confidence !== undefined ? (
+                        {(report.ai_confidence != null) ? (
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
                               <span className={`material-symbols-outlined text-sm ${report.ai_verified ? 'text-green-500' : 'text-red-500'}`}>
@@ -204,11 +210,11 @@ const AuthorityDashboardPage = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(report.created_at).toLocaleDateString()}
+                        {report.report_date ? new Date(report.report_date).toLocaleDateString() : 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link
-                          to={`/complaint/${report.id}`}
+                          to={`/complaint/${report._id || report.id}`}
                           className="text-primary hover:underline font-medium"
                         >
                           View Details

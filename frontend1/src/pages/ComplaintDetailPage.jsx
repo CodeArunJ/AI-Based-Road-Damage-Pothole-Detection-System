@@ -92,7 +92,7 @@ const ComplaintDetailPage = () => {
         <div className="bg-white dark:bg-gray-900 rounded-xl p-6 mb-6 border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Report #{report.id}</h1>
+              <h1 className="text-3xl font-bold mb-2">Report #{(report._id || report.id)?.substring(0, 8)}</h1>
               <p className="text-gray-600 dark:text-gray-400">
                 Submitted on {new Date(report.created_at).toLocaleString()}
               </p>

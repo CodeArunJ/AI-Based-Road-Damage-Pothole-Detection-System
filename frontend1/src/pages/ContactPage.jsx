@@ -71,6 +71,7 @@ const ContactPage = () => {
                   type="text"
                   id="name"
                   placeholder="John Doe"
+                  data-testid="contact-name"
                   className="w-full px-4 py-3 rounded-lg border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -84,6 +85,7 @@ const ContactPage = () => {
                   type="email"
                   id="email"
                   placeholder="john@example.com"
+                  data-testid="contact-email"
                   className="w-full px-4 py-3 rounded-lg border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -95,6 +97,7 @@ const ContactPage = () => {
                 </label>
                 <select
                   id="subject"
+                  data-testid="contact-subject"
                   className="w-full px-4 py-3 rounded-lg border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option>General Inquiry</option>
@@ -114,6 +117,7 @@ const ContactPage = () => {
                   id="message"
                   placeholder="Tell us what's on your mind..."
                   rows="6"
+                  data-testid="contact-message"
                   className="w-full px-4 py-3 rounded-lg border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#111418] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                 />
               </div>
@@ -121,6 +125,7 @@ const ContactPage = () => {
               {/* Submit Button */}
               <button
                 type="submit"
+                data-testid="contact-submit"
                 className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
               >
                 Send Message

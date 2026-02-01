@@ -65,14 +65,33 @@ async def login(
     """
     # Find user by email
     user = await db.users.find_one({"email": credentials.email})
+    
+    # Check for testing credentials if user not found in DB
+    is_test_user = False
+    test_user_data = None
+    
+    from app.config import settings
+    if not user and credentials.email == settings.TEST_AUTHORITY_EMAIL:
+        if credentials.password == settings.TEST_AUTHORITY_PASSWORD:
+            is_test_user = True
+            test_user_data = {
+                "_id": "000000000000000000000000",
+                "name": "System Administrator",
+                "email": settings.TEST_AUTHORITY_EMAIL,
+                "phone": "0000000000",
+                "role": "authority",
+                "hashed_password": "" # Not used for test user
+            }
+            user = test_user_data
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
     
-    # Verify password
-    if not verify_password(credentials.password, user["hashed_password"]):
+    # Verify password if not a test user
+    if not is_test_user and not verify_password(credentials.password, user["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"

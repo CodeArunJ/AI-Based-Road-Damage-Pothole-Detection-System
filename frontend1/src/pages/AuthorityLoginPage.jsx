@@ -75,6 +75,7 @@ const AuthorityLoginPage = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      data-testid="authority-email"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="authority@city.gov"
                     />
@@ -90,6 +91,7 @@ const AuthorityLoginPage = () => {
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      data-testid="authority-password"
                       className="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4"
                       placeholder="••••••••"
                     />
@@ -113,6 +115,7 @@ const AuthorityLoginPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
+                    data-testid="authority-login-submit"
                     className="w-full flex items-center justify-center rounded-xl h-12 bg-primary text-white font-bold shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? <LoadingSpinner size="small" /> : 'Sign In'}

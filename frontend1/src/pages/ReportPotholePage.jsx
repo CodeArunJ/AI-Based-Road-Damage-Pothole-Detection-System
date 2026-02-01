@@ -185,6 +185,7 @@ const ReportPotholePage = () => {
                     type="file"
                     accept="image/jpeg,image/jpg,image/png"
                     onChange={handleFileChange}
+                    data-testid="report-image-input"
                     className="hidden"
                   />
                 </div>
@@ -231,6 +232,7 @@ const ReportPotholePage = () => {
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      data-testid="report-description"
                       className="form-input flex w-full min-w-0 flex-1 resize-none rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary min-h-32 p-[15px] text-base font-normal placeholder:text-[#617589] dark:placeholder:text-gray-500"
                       placeholder="e.g., Near the corner of 5th and Main, outside the city park entrance."
                     />
@@ -242,6 +244,7 @@ const ReportPotholePage = () => {
                   <button
                     type="submit"
                     disabled={loading}
+                    data-testid="report-submit"
                     className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 bg-primary text-white text-lg font-bold shadow-lg hover:shadow-primary/20 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? <LoadingSpinner size="small" /> : 'Submit Complaint'}
@@ -251,7 +254,7 @@ const ReportPotholePage = () => {
 
               {/* Success Message */}
               {submitted && (
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 rounded-xl p-6 flex items-start gap-4">
+                <div data-testid="report-success" className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 rounded-xl p-6 flex items-start gap-4">
                   <div className="bg-green-500 text-white rounded-full p-2 flex items-center justify-center">
                     <span className="material-symbols-outlined">check_circle</span>
                   </div>
@@ -269,7 +272,7 @@ const ReportPotholePage = () => {
                     </p>
                     <div className="flex items-center gap-2">
                       <span className="text-[#617589] dark:text-gray-400 text-sm font-medium">Complaint ID:</span>
-                      <code className="bg-white dark:bg-gray-800 border border-green-100 dark:border-green-900 px-2 py-1 rounded font-bold text-green-800 dark:text-green-400">
+                      <code data-testid="report-complaint-id" className="bg-white dark:bg-gray-800 border border-green-100 dark:border-green-900 px-2 py-1 rounded font-bold text-green-800 dark:text-green-400">
                         #{reportId}
                       </code>
                     </div>

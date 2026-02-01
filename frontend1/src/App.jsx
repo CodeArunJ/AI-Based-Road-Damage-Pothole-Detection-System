@@ -26,7 +26,14 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/how-it-works" element={<HowItWorksPage />} />
-            <Route path="/recent-reports" element={<RecentReportsPage />} />
+            <Route 
+              path="/recent-reports" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <RecentReportsPage />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/citizen-login" element={<CitizenLoginPage />} />
             <Route path="/citizen-signup" element={<CitizenSignupPage />} />

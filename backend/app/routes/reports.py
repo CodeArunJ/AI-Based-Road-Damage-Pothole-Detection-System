@@ -39,8 +39,12 @@ async def create_report(
     # Create location model
     location = LocationModel(latitude=latitude, longitude=longitude)
     
-    # Create report
+    # Pre-generate ID for AI service
+    report_id = ObjectId()
+    
+    # Create report model
     report = ReportInDB(
+        _id=report_id,
         user_id=ObjectId(current_user.user_id),
         image_path=image_path,
         location=location,
@@ -48,36 +52,35 @@ async def create_report(
         status="pending"
     )
     
-    # Insert into database
-    result = await db.pothole_reports.insert_one(report.dict(by_alias=True, exclude={"id"}))
-    report.id = result.inserted_id
+    # Run AI verification
+    verification = await ai_service.verify_pothole(image_path, report_id)
     
-    # Trigger AI verification asynchronously
-    verification = await ai_service.verify_pothole(image_path, report.id)
-    await db.image_verification.insert_one(verification.dict(by_alias=True, exclude={"id"}))
+    # Prepare report data
+    report_dict = report.dict(by_alias=True)
+    report_dict["ai_confidence"] = verification.confidence_score
+    report_dict["ai_verified"] = verification.is_pothole
     
-    # Auto-verify if confidence is high enough
+    # Auto-verify/reject based on AI
     if verification.is_pothole and ai_service.should_auto_verify(verification.confidence_score):
-        await db.pothole_reports.update_one(
-            {"_id": report.id},
-            {"$set": {"status": "verified"}}
-        )
+        report_dict["status"] = "verified"
         report.status = "verified"
     elif not verification.is_pothole:
-        # Reject if AI doesn't detect a pothole
-        await db.pothole_reports.update_one(
-            {"_id": report.id},
-            {"$set": {"status": "rejected"}}
-        )
+        report_dict["status"] = "rejected"
         report.status = "rejected"
     
-    # Return response with AI verification data
+    # Save to database
+    await db.pothole_reports.insert_one(report_dict)
+    
+    # Also save to verification history
+    await db.image_verification.insert_one(verification.dict(by_alias=True, exclude={"id"}))
+    
+    # Return response
     return ReportResponse(
-        _id=str(report.id),
+        _id=str(report_id),
         user_id=str(report.user_id),
         ai_confidence=verification.confidence_score,
         ai_verified=verification.is_pothole,
-        **report.dict(exclude={"id", "user_id"})
+        **report.dict(exclude={"id", "user_id", "status"})
     )
 
 
@@ -114,9 +117,31 @@ async def get_reports(
                 detail="Invalid status filter"
             )
         query["status"] = status_filter
+
+    # Build aggregation pipeline
+    pipeline = [
+        {"$match": query},
+        {"$lookup": {
+            "from": "image_verification",
+            "localField": "_id",
+            "foreignField": "report_id",
+            "as": "verification_data"
+        }},
+        {"$addFields": {
+            "ai_confidence": {
+                "$ifNull": ["$ai_confidence", {"$arrayElemAt": ["$verification_data.confidence_score", 0]}]
+            },
+            "ai_verified": {
+                "$ifNull": ["$ai_verified", {"$arrayElemAt": ["$verification_data.is_pothole", 0]}]
+            }
+        }},
+        {"$sort": {"report_date": -1}},
+        {"$skip": skip},
+        {"$limit": limit}
+    ]
     
     # Fetch reports
-    cursor = db.pothole_reports.find(query).skip(skip).limit(limit).sort("report_date", -1)
+    cursor = db.pothole_reports.aggregate(pipeline)
     reports = await cursor.to_list(length=limit)
     
     # Convert to response models
@@ -128,7 +153,9 @@ async def get_reports(
             location=report["location"],
             description=report.get("description"),
             status=report["status"],
-            report_date=report["report_date"]
+            report_date=report["report_date"],
+            ai_confidence=report.get("ai_confidence"),
+            ai_verified=report.get("ai_verified")
         )
         for report in reports
     ]
@@ -148,8 +175,28 @@ async def get_report(
             detail="Invalid report ID"
         )
     
-    # Fetch report
-    report = await db.pothole_reports.find_one({"_id": ObjectId(report_id)})
+    # Fetch report with verification data using aggregation
+    pipeline = [
+        {"$match": {"_id": ObjectId(report_id)}},
+        {"$lookup": {
+            "from": "image_verification",
+            "localField": "_id",
+            "foreignField": "report_id",
+            "as": "verification_data"
+        }},
+        {"$addFields": {
+            "ai_confidence": {
+                "$ifNull": ["$ai_confidence", {"$arrayElemAt": ["$verification_data.confidence_score", 0]}]
+            },
+            "ai_verified": {
+                "$ifNull": ["$ai_verified", {"$arrayElemAt": ["$verification_data.is_pothole", 0]}]
+            }
+        }}
+    ]
+    
+    cursor = db.pothole_reports.aggregate(pipeline)
+    results = await cursor.to_list(length=1)
+    report = results[0] if results else None
     
     if not report:
         raise HTTPException(
@@ -167,7 +214,13 @@ async def get_report(
     return ReportResponse(
         _id=str(report["_id"]),
         user_id=str(report["user_id"]),
-        **{k: v for k, v in report.items() if k not in ["_id", "user_id"]}
+        image_path=report["image_path"],
+        location=report["location"],
+        description=report.get("description"),
+        status=report["status"],
+        report_date=report["report_date"],
+        ai_confidence=report.get("ai_confidence"),
+        ai_verified=report.get("ai_verified")
     )
 
 
