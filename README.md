@@ -1,193 +1,279 @@
-# RoadCare - AI-Based Road Detection System
+# RoadCare - AI-Based Road Damage & Pothole Detection System
 
-A full-stack application for reporting and managing road damage using AI-powered verification.
+RoadCare is an advanced autonomous road infrastructure monitoring system leveraging Deep Learning (YOLOv8, Image Classification) to detect road damage, potholes, and other pavement defects in real-time. It provides instant citizen reporting via mobile apps, AI verification by authorities, and automated repair coordination through Telegram notifications and a centralized dashboard.
 
-## Project Structure
+## 🚀 Features
 
-This project consists of two main parts:
+- **Real-Time Damage Detection**: Detects potholes, cracks, and road damage using custom-trained YOLOv8 models
+- **Citizen Reporting**: Mobile-friendly interface for citizens to report damage with photos and GPS location
+- **AI Verification**: Automatic damage classification and severity assessment using deep learning models
+- **Authority Dashboard**: Secure management portal for reviewing, verifying, and tracking repair status
+- **Smart Notifications**: Real-time alerts via Telegram and dashboard updates for report changes
+- **Location-Based Analytics**: Geospatial visualization of damage hotspots and repair progress
+- **Secure & Scalable**: Built with FastAPI, React, and MongoDB for production-grade reliability
 
-### Backend (FastAPI)
-- **Location**: `backend/`
-- **Technology**: Python, FastAPI, SQLAlchemy
-- **Port**: 8000
+## 🛠️ Tech Stack
 
-### Frontend (React + Vite)
-- **Location**: `frontend1/` (New React version)
-- **Technology**: React 18, Vite, Tailwind CSS, Axios
-- **Port**: 3000
+- **Frontend**: React 18, TypeScript, Vite, TailwindCSS, Axios
+- **Backend**: Python, FastAPI, Uvicorn, SQLAlchemy
+- **Deep Learning**: YOLOv8 (Ultralytics), TensorFlow, PyTorch, OpenCV
+- **Database**: SQLite (Development) / PostgreSQL (Production)
+- **Notifications**: Telegram Bot API
+- **APIs**: RESTful architecture with automatic Swagger documentation
 
-### Legacy Frontend
-- **Location**: `frontend/`
-- **Technology**: Vanilla HTML/CSS/JavaScript
-- **Note**: Original version, replaced by React frontend
+## 📦 Installation
 
-## Quick Start
-
-### Prerequisites
-- Python 3.8+
-- Node.js 16+
-- npm or yarn
-
-### 1. Start the Backend
+### Clone the repository:
 
 ```bash
-# Navigate to backend directory
+git clone https://github.com/CodeArunJ/AI-Based-Road-Damage-Pothole-Detection-System.git
+cd AI-Based-Road-Damage-Pothole-Detection-System
+```
+
+### Environment Setup
+
+Create a `.env` file in the root directory with required configuration.
+
+**Required keys:**
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `JWT_SECRET`
+- `TELEGRAM_BOT_TOKEN` (optional, for notifications)
+
+### Run Verification & Setup
+
+Execute the setup script to validate your environment and install dependencies:
+
+```bash
+python setup_project.py
+```
+
+### Start the Application
+
+**Backend:**
+```bash
 cd backend
-
-# Create virtual environment (if not exists)
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-.venv\Scripts\Activate.ps1
-# Linux/Mac:
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the server
 python run.py
 ```
 
-Backend will be available at `http://localhost:8000`
-
-### 2. Start the React Frontend
-
-Open a new terminal:
-
+**Frontend:**
 ```bash
-# Navigate to frontend directory
 cd frontend1
-
-# Install dependencies (first time only)
 npm install
-
-# Start development server
 npm run dev
 ```
 
-Frontend will be available at `http://localhost:3000`
+## 🛡️ Usage
 
-## Features
+1. Access the citizen portal at `http://localhost:3000`
+2. Citizens can report potholes with photos and location data
+3. Authorities access `http://localhost:3000/authority-login` to verify and manage reports
+4. Real-time updates appear in the dashboard
+5. Repair coordinators receive Telegram alerts for high-priority damage
 
-### For Citizens
-- 📸 Report potholes by uploading photos
-- 📍 Automatic GPS location detection
-- 🤖 AI-powered damage verification
-- 📊 Track report status
+## 📄 License
 
-### For Authorities
-- 🔐 Secure authentication
-- 📋 Dashboard for managing reports
-- ✅ Verify and update report statuses
-- 📈 Analytics and statistics
-- 🗺️ Location-based report viewing
+MIT License
 
-## API Documentation
+---
 
-Once the backend is running, visit:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+## 📘 Repository Architecture & System Documentation
 
-## Technology Stack
+### 1. Project Overview
 
-### Backend
-- **FastAPI** - Modern Python web framework
-- **SQLAlchemy** - ORM for database operations
-- **Pydantic** - Data validation
-- **JWT** - Authentication
-- **Python-multipart** - File upload handling
+RoadCare is a production-grade Road Infrastructure Management System designed for municipal governments, road authorities, and civic bodies to efficiently detect, verify, and coordinate repair of road damage. It bridges the gap between passive citizen complaints and proactive damage detection using Computer Vision technology.
 
-### Frontend
-- **React 18** - UI library
-- **Vite** - Build tool
-- **React Router** - Client-side routing
-- **Axios** - HTTP client
-- **Tailwind CSS** - Styling
-- **Context API** - State management
+Unlike traditional manual inspection processes, RoadCare leverages AI-powered image recognition to automatically identify and classify pavement defects from citizen-submitted photos. The system then facilitates authority verification, repair planning, and progress tracking through an integrated dashboard and notification system.
 
-## Development
+**Key Technologies:**
 
-### Backend Development
+- **Computer Vision**: YOLOv8 (Object Detection), OpenCV (Image Processing), Damage Classification Models
+- **Backend Architecture**: FastAPI (High-performance Async I/O), WebSockets (Real-time updates)
+- **Frontend Interface**: React + Vite (Responsive dashboard, mobile-optimized citizen portal)
+- **Infrastructure**: SQLite/PostgreSQL (Data Persistence), RESTful APIs
 
-```bash
-cd backend
+### 2. Repository Structure & File Responsibilities
 
-# Install dev dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-pytest
-
-# Format code
-black .
+```
+AI-Based-Road-Damage-Pothole-Detection-System/
+│
+├── backend/                       # Python Backend & AI Engine
+│   ├── app/
+│   │   ├── config/                # Database & app configuration
+│   │   ├── models/                # SQLAlchemy ORM models
+│   │   │   ├── report.py          # Damage report schema
+│   │   │   ├── user.py            # User authentication
+│   │   │   ├── repair.py          # Repair tracking
+│   │   │   ├── verification.py    # AI verification results
+│   │   │   └── risk_zone.py       # High-risk area mapping
+│   │   ├── routes/                # API endpoints
+│   │   │   ├── auth.py            # Authentication endpoints
+│   │   │   ├── reports.py         # Report management
+│   │   │   ├── repairs.py         # Repair coordination
+│   │   │   └── zones.py           # Risk zone analysis
+│   │   ├── services/              # Business logic & AI
+│   │   │   ├── ai_verification_service.py  # MAIN AI ENGINE: Damage classification
+│   │   │   ├── image_service.py   # Image processing & storage
+│   │   │   └── clustering_service.py # Damage hotspot detection
+│   │   ├── utils/
+│   │   │   ├── auth.py            # JWT token handling
+│   │   │   └── validators.py      # Input validation
+│   │   ├── main.py                # Application Entry Point
+│   │   └── __init__.py
+│   ├── requirements.txt           # Python dependencies
+│   ├── requirements-dev.txt       # Development dependencies
+│   ├── run.py                     # Server launcher
+│   └── uploads/                   # Temporary image storage
+│
+├── frontend1/                     # React Frontend
+│   ├── src/
+│   │   ├── components/            # Reusable UI components
+│   │   │   ├── Header.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── LoadingSpinner.jsx
+│   │   │   └── Toast.jsx
+│   │   ├── pages/                 # Application views
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── ReportPotholePage.jsx    # Citizen report form
+│   │   │   ├── CitizenLoginPage.jsx
+│   │   │   ├── CitizenSignupPage.jsx
+│   │   │   ├── AuthorityLoginPage.jsx
+│   │   │   ├── AuthorityDashboardPage.jsx # Admin verification panel
+│   │   │   ├── ComplaintDetailPage.jsx
+│   │   │   ├── RecentReportsPage.jsx
+│   │   │   ├── ContactPage.jsx
+│   │   │   └── HowItWorksPage.jsx
+│   │   ├── context/               # Global state management
+│   │   │   ├── AuthContext.jsx
+│   │   │   └── ThemeContext.jsx
+│   │   ├── services/              # API integration
+│   │   │   └── apiService.js
+│   │   ├── utils/
+│   │   │   └── storageUtils.js
+│   │   ├── config/
+│   │   │   └── config.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+│
+├── setup_project.py               # Automated setup & verification
+├── requirements.txt               # Root dependencies (if any)
+├── .env                           # Environment configuration (not in git)
+├── .gitignore
+├── vercel.json                    # Frontend deployment config
+├── pytest.ini                     # Testing configuration
+├── MIGRATION.md                   # Frontend migration notes
+└── README.md                      # This file
 ```
 
-### Frontend Development
+### 3. Environment Variables & Configuration
 
-```bash
-cd frontend1
+The system follows 12-Factor App principles with all configuration via `.env` file.
 
-# Run linter
-npm run lint
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| **DATABASE_URL** | Connection String | YES | SQLite or PostgreSQL connection (e.g., `sqlite:///./roadcare.db`) |
+| **SECRET_KEY** | String | YES | Application secret for encryption |
+| **JWT_SECRET** | String | YES | Cryptographic key for JWT tokens |
+| **ALGORITHM** | String | No | JWT algorithm (Default: HS256) |
+| **ACCESS_TOKEN_EXPIRE_MINUTES** | Integer | No | Token expiration time (Default: 30) |
+| **TELEGRAM_BOT_TOKEN** | String | No | Telegram bot token for notifications |
+| **TELEGRAM_CHAT_ID** | String | No | Target Telegram chat/channel ID |
+| **CONFIDENCE_THRESHOLD** | Float | No | AI confidence minimum for damage detection (Default: 0.60) |
+| **YOLO_MODEL_PATH** | Path | No | Path to custom YOLO model |
+| **MODEL_CACHE_DIR** | Path | No | Directory for ML model caching |
 
-# Build for production
-npm run build
+### 4. Dependency Analysis
 
-# Preview production build
-npm run preview
-```
+**Backend Core:**
+- `fastapi`, `uvicorn`: High-performance ASGI web server framework
+- `sqlalchemy`: ORM for database operations
+- `pydantic`: Data validation and settings management
 
-## Environment Variables
+**Deep Learning & Vision:**
+- `ultralytics`: YOLOv8 implementation for damage detection
+- `opencv-python`: Image processing (resizing, normalization, encoding)
+- `pillow`: Image manipulation and format conversion
+- `numpy`: Numerical operations on image arrays
 
-### Backend (.env)
-```env
-DATABASE_URL=sqlite:///./roadcare.db
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
+**Infrastructure:**
+- `sqlalchemy`: Database ORM for PostgreSQL/SQLite
+- `python-telegram-bot`: Async Telegram API wrapper
+- `python-jose`, `passlib`: JWT tokens and password hashing
+- `python-multipart`: Multipart form handling for image uploads
 
-### Frontend (.env)
-```env
-VITE_API_BASE_URL=http://localhost:8000
-```
+**Frontend:**
+- `react@18`, `react-dom`: UI framework
+- `vite`: Next-generation build tool
+- `axios`: HTTP client with interceptors
+- `react-router-dom`: Client-side routing
+- `tailwindcss`: Utility-first CSS framework
 
-## Project Timeline
+### 5. System & Laptop Configuration Requirements
 
-1. **Original Version**: Vanilla HTML/CSS/JavaScript frontend (`frontend/`)
-2. **Current Version**: Modern React + Vite frontend (`frontend1/`)
-3. **Backend**: FastAPI RESTful API (`backend/`)
+**Minimum Requirements (CPU Processing):**
+- **OS**: Windows 10/11, Linux (Ubuntu 20.04+), macOS
+- **CPU**: Intel Core i5 (8th Gen) / AMD Ryzen 5 or equivalent
+- **RAM**: 8 GB (for model inference)
+- **Storage**: 4 GB free space (models, dependencies, cache)
+- **Python**: 3.9, 3.10, 3.11, or 3.12
+- **Node.js**: 16.x or higher
 
-## Migration Notes
+**Recommended Requirements (Faster Processing):**
+- **CPU**: Intel Core i7 (10th Gen+) / AMD Ryzen 7
+- **RAM**: 16 GB DDR4
+- **GPU**: NVIDIA GTX 1060 (6GB) - optional for ~2-3x faster inference
+- **CUDA**: 11.8 or 12.1 (if GPU available)
 
-The frontend has been completely migrated from vanilla JavaScript to React:
+**Windows-Specific Considerations:**
+- Long path support may be needed for deep learning libraries
+- Run `python setup_project.py` which handles path configuration automatically
 
-### What Changed
-- ✅ Component-based architecture
-- ✅ Modern React Hooks for state management
-- ✅ React Router for navigation
-- ✅ Context API for global state (Auth, Theme)
-- ✅ Axios with interceptors for API calls
-- ✅ Vite for fast development and optimized builds
-- ✅ Better code organization and maintainability
+### 6. Application Execution Flow
 
-### What Stayed the Same
-- ✅ All existing features preserved
-- ✅ Same UI/UX design
-- ✅ Tailwind CSS styling
-- ✅ Material Symbols icons
-- ✅ Dark mode support
-- ✅ Responsive design
+**Initialization Phase:**
+1. `run.py` executes and initializes the FastAPI application
+2. `.env` variables are loaded and validated
+3. Database connection is established to SQLite/PostgreSQL
 
-## Contributing
+**AI Model Initialization:**
+1. YOLOv8 model is loaded into memory (auto-downloads if missing)
+2. Image processing pipeline is initialized
+3. Damage classification model is prepared
 
-1. Create a feature branch
-2. Make your changes
-3. Test thoroughly
-4. Submit a pull request
+**Request Processing Flow:**
+1. **Citizen Report**: User uploads image + location data via `/api/reports/create`
+2. **Image Ingestion**: Image is stored and normalized
+3. **AI Processing**: 
+   - YOLOv8 detects damage regions (potholes, cracks)
+   - Severity classification determines damage level (Low/Medium/High/Critical)
+   - Confidence score > CONFIDENCE_THRESHOLD triggers verification
+4. **Authority Verification**: Dashboard displays unverified reports for manual review
+5. **Notification**: Telegram alert sent to authorities for high-severity cases
+6. **Tracking**: Repair status updated as crews work on fixes
 
-## License
+### 7. Setup & Installation Best Practices
 
-© 2024 RoadCare AI Systems. All rights reserved.
+1. **Virtual Environment**: Use `python -m venv venv` to isolate dependencies
+2. **Dependencies**: Run `pip install -r requirements.txt` after activation
+3. **Database**: Initialize with `python setup_project.py` or manual migration
+4. **Frontend**: Install Node modules with `npm install` in `frontend1/`
+5. **Configuration**: Always create `.env` with sensitive keys before running
+
+### 8. Security & Best Practices
+
+- **Secret Management**: Never commit `.env` to version control
+- **Authentication**: JWT tokens required for authority dashboard access
+- **Input Validation**: All user inputs validated via Pydantic schemas
+- **Image Security**: Uploaded images scanned before processing
+- **Rate Limiting**: API endpoints implement request throttling (60 req/min)
+- **CORS**: Cross-origin requests restricted to authorized domains
+- **HTTPS**: Enable in production via reverse proxy (Nginx/Apache)
+
+---
+
+📄 Documentation auto-generated by repository analysis. All project-specific details adapted to RoadCare infrastructure management system.
